@@ -1,49 +1,80 @@
-32-bit 5-Stage Pipelined RISC-V Processor (RV32I)
-A 32-bit RISC-V processor core implementing the base integer (RV32I) instruction set. This project features a classic 5-stage pipeline architecture written in SystemVerilog, validated using a self-checking testbench.
+# 32-bit 5-Stage Pipelined RISC-V Processor (RV32I)
 
-Architecture Overview
-The core is built with a meticulously routed 5-stage datapath (Instruction Fetch, Instruction Decode, Execute, Memory Access, and Write Back). To handle data and control dependencies, the architecture includes dedicated hardware logic for hazard mitigation and data forwarding.
+A modular 32-bit RISC-V processor implementing the RV32I base integer instruction set, designed in SystemVerilog using a classic five-stage pipeline. The design incorporates hazard detection and data forwarding mechanisms and is validated using a self-checking testbench.
 
-Key Features:
+## Architecture Overview
 
-ISA: RV32I Base Integer Instruction Set
+The processor uses a five-stage pipeline to enable concurrent instruction execution.
 
-Pipeline Stages: IF, ID, EX, MEM, WB
+| Stage | Name | Function |
+|---|---|---|
+| IF | Instruction Fetch | Fetches instructions using the program counter. |
+| ID | Instruction Decode | Decodes instructions and reads source registers. |
+| EX | Execute | Performs ALU operations, evaluates branches, and calculates addresses. |
+| MEM | Memory Access | Performs data memory read and write operations. |
+| WB | Write Back | Writes results back to the register file. |
 
-Hazard Management: Custom hazard detection unit and data forwarding to resolve Read-After-Write (RAW) data hazards and control hazards.
+## Key Features
 
-Component Modularity: Fully modular design down to foundational levels (custom ALUs, program counters, pipeline registers, and multiplexers).
+- **ISA:** RV32I base integer instruction set.
+- **Pipelined Architecture:** Five-stage IF, ID, EX, MEM, and WB datapath.
+- **Hazard Detection:** Identifies data dependencies and inserts stalls where required.
+- **Data Forwarding:** Reduces RAW (Read-After-Write) hazards by forwarding results between pipeline stages.
+- **Control Hazard Handling:** Implements branch-related control logic.
+- **Modular RTL:** Separate modules for the ALU, control unit, program counter, pipeline registers, multiplexers, immediate generators, and memory.
+- **Functional Verification:** Self-checking SystemVerilog testbench.
 
-Repository Structure
-Plaintext
+## Repository Structure
+
+```text
 riscv_pipelined/
-├── rtl/            # Register Transfer Level source files (SystemVerilog)
-│   ├── design.sv          # Top-level RISC-V core wrapper
-│   ├── alu.sv             # Arithmetic Logic Unit
-│   ├── hazard.sv          # Hazard detection and forwarding unit
-│   ├── *_reg.sv           # Pipeline stage registers (if_id, id_ex, ex_mem, mem_wb)
-│   └── ...                # Other core components (control unit, PC, extenders, memory)
-├── tb/             # Testbench files
-│   └── testbench.sv       # Self-checking testbench for core validation
-├── sim/            # Simulation output and waveform files (.vcd, .wlf, logs)
-└── docs/           # Architecture diagrams and pipeline documentation (Coming Soon)
+├── rtl/
+│   ├── design.sv
+│   ├── alu.sv
+│   ├── hazard.sv
+│   ├── *_reg.sv
+│   └── ...
+├── tb/
+│   └── testbench.sv
+├── sim/
+│   └── Simulation logs and waveforms
+└── docs/
+    └── Architecture documentation
+```
 
-Development Environment
-This project is developed and simulated in a dual-boot style WSL2 (Ubuntu) environment using:
+## Development Environment
 
-IDE: Visual Studio Code
+- **Language:** SystemVerilog
+- **IDE:** Visual Studio Code
+- **Environment:** Ubuntu on WSL2
+- **Initial Simulation:** EDA Playground
+- **Verification:** Self-checking testbench and waveform analysis
 
-Languages: SystemVerilog
+## Verification
 
-Initial Validation: EDA Playground
+The processor is validated through simulation to evaluate instruction execution and pipeline behavior.
 
-Future Roadmap
-The architecture is designed to be extensible. Planned enhancements include:
+Test scenarios include:
 
-Instruction Set Extension: Implementing the M-Extension for hardware multiplication and division.
+- Arithmetic and logical operations
+- Register read and write operations
+- Load and store instructions
+- Data hazard detection and forwarding
+- Pipeline stalls and branch handling
+- Instruction sequencing across pipeline stages
 
-Memory Hierarchy: Integration of an L1 Cache.
+## Future Enhancements
 
-Bus Protocols: Wrapping the core with standard AXI bus interfaces.
+- **RISC-V M-Extension:** Implement hardware multiplication and division.
+- **L1 Cache:** Introduce instruction and data caches.
+- **AXI Interface:** Integrate standard AXI bus interfaces.
+- **Advanced Verification:** Add directed and randomized tests for corner cases and hazard-intensive instruction sequences.
+- **RTL-to-GDSII Flow:** Explore synthesis and physical implementation using OpenLane and the SkyWater SKY130 PDK.
 
-Physical Design: Executing a complete RTL-to-GDSII flow using OpenLANE and the SkyWater 130nm PDK
+## Learning Outcomes
+
+- Five-stage pipelined processor microarchitecture
+- SystemVerilog RTL design and modular hardware development
+- Data hazard detection, forwarding, and pipeline control
+- Functional verification using self-checking testbenches
+- Simulation-based debugging and waveform analysis
